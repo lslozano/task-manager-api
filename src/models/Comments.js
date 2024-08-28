@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const Comments = new mongoose.Schema({
+export const CommentsSchema = new mongoose.Schema({
   comment: {
     type: String,
     required: true,
@@ -21,3 +21,7 @@ export const Comments = new mongoose.Schema({
     required: true,
   },
 });
+
+const Comments = mongoose.model("Comments", CommentsSchema);
+
+export default Comments;
