@@ -6,11 +6,11 @@ const expectValidationErrorForFields = (error, fields) => {
   });
 };
 
-const getMissingRequiredFields = (requiredFields, model) => {
+const getMissingRequiredFieldsFromModel = (requiredFields, model) => {
   return requiredFields.filter((field) => !model[field]);
 };
 
 module.exports = {
   expectValidationErrorForFields,
-  getMissingRequiredFields,
+  getMissingRequiredFieldsFromModel,
 };
