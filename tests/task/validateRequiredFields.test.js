@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const { TaskSchema } = require("../../src/models/Task");
+const { TaskSchema } = require("../../src/api/models/Task");
 const {
+  getValidationError,
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
 } = require("../utils/index");
@@ -13,18 +14,9 @@ describe("Task Required Fields Validation", () => {
   it("should not allow creating a task when all required fields are missing", async () => {
     const task = new Task();
 
-    let err;
+    const error = await getValidationError(task);
 
-    try {
-      await task.validate();
-    } catch (error) {
-      err = error;
-    }
-
-    expectValidationErrorForFields(
-      err,
-      getMissingRequiredFieldsFromModel(taskRequiredFields, task)
-    );
+    expectValidationErrorForFields(error, taskRequiredFields);
   });
 
   it("should not allow creating a task when only some required fields have been provided", async () => {
@@ -32,16 +24,10 @@ describe("Task Required Fields Validation", () => {
       title: "Task 1",
     });
 
-    let err;
-
-    try {
-      await task.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(task);
 
     expectValidationErrorForFields(
-      err,
+      error,
       getMissingRequiredFieldsFromModel(taskRequiredFields, task)
     );
   });
@@ -53,16 +39,10 @@ describe("Task Required Fields Validation", () => {
       createdAt: Date.now,
     });
 
-    let err;
-
-    try {
-      await task.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(task);
 
     expectValidationErrorForFields(
-      err,
+      error,
       getMissingRequiredFieldsFromModel(taskRequiredFields, task)
     );
   });

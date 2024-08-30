@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { TaskSchema } = require("../../src/models/Task");
+const { TaskSchema } = require("../../src/api/models/Task");
 
 const Task = mongoose.model("Task", TaskSchema);
 
