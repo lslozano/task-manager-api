@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     lowercase: true,
@@ -24,7 +24,6 @@ export const UserSchema = new mongoose.Schema({
       enum: ["guest", "regular", "admin"],
       default: "regular",
     },
-    required: true,
   },
   email: {
     type: String,
@@ -34,7 +33,7 @@ export const UserSchema = new mongoose.Schema({
   },
   hashPassword: {
     type: String,
-    minlenght: 8,
+    minlength: 8,
     required: true,
   },
   createdAt: {
@@ -47,4 +46,7 @@ export const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
-export default User;
+module.exports = {
+  UserSchema,
+  User,
+};
