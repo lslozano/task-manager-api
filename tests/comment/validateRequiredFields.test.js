@@ -1,26 +1,22 @@
 const mongoose = require("mongoose");
-const { CommentSchema } = require("../../src/models/Comment");
+const { CommentSchema } = require("../../src/api/models/Comment");
 const {
+  getValidationError,
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
 } = require("../utils/index");
 
 const Comment = mongoose.model("Comment", CommentSchema);
 
-const commentRequiredFields = ["comment", "createBy", "taskId"];
+const commentRequiredFields = ["comment", "createdBy", "taskId"];
 
 describe("Comment Required Fields Validation", () => {
   it("should not allow creating a comment when all required fields are missing", async () => {
-    const comment = new Comment({});
+    const comment = new Comment();
 
-    let err;
-    try {
-      await comment.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(comment);
 
-    expectValidationErrorForFields(err, commentRequiredFields);
+    expectValidationErrorForFields(error, commentRequiredFields);
   });
 
   it("should not allow creating a comment when only some required fields have been provided", async () => {
@@ -28,15 +24,10 @@ describe("Comment Required Fields Validation", () => {
       comment: "This is a new comment",
     });
 
-    let err;
-    try {
-      await comment.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(comment);
 
     expectValidationErrorForFields(
-      err,
+      error,
       getMissingRequiredFieldsFromModel(commentRequiredFields, comment)
     );
   });
@@ -50,15 +41,10 @@ describe("Comment Required Fields Validation", () => {
       taskId: taskId,
     });
 
-    let err;
-    try {
-      await comment.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(comment);
 
     expectValidationErrorForFields(
-      err,
+      error,
       getMissingRequiredFieldsFromModel(commentRequiredFields, comment)
     );
   });
@@ -71,5 +57,12 @@ describe("Comment Required Fields Validation", () => {
       createdBy: userId,
       taskId: 1,
     });
+
+    const error = await getValidationError(comment);
+
+    expectValidationErrorForFields(
+      error,
+      getMissingRequiredFieldsFromModel(commentRequiredFields, comment)
+    );
   });
 });
