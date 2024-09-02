@@ -10,7 +10,7 @@ describe("User Save", () => {
       lastName: "Doe",
       username: "johndoe",
       email: "johndoe@gmail.com",
-      hashPassword: "12345678",
+      password: "12345678",
     });
 
     await expect(user.save()).resolves.toBeDefined();
