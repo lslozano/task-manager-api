@@ -12,7 +12,7 @@ const userRequiredFields = [
   "lastName",
   "username",
   "email",
-  "hashPassword",
+  "password",
 ];
 
 afterEach(async () => {
@@ -56,13 +56,13 @@ describe("User Required Fields Validation", () => {
     );
   });
 
-  it("should not allow creating a user when password length is less than eight characters", async () => {
+  it("should not allow creating a user when the email format is invalid", async () => {
     const user = new User({
       firstName: "John",
       lastName: "Doe",
       username: "johndoe",
-      email: "john@gmail.com",
-      hashPassword: "123456",
+      email: "invalid-format",
+      password: "123456789",
     });
 
     let err;
@@ -72,6 +72,25 @@ describe("User Required Fields Validation", () => {
       err = error;
     }
 
-    expectValidationErrorForFields(err, ["hashPassword"]);
+    expectValidationErrorForFields(err, ["email"]);
+  });
+
+  it("should not allow creating a user when password length is less than eight characters", async () => {
+    const user = new User({
+      firstName: "John",
+      lastName: "Doe",
+      username: "johndoe",
+      email: "john@gmail.com",
+      password: "123456",
+    });
+
+    let err;
+    try {
+      await user.validate();
+    } catch (error) {
+      err = error;
+    }
+
+    expectValidationErrorForFields(err, ["password"]);
   });
 });
