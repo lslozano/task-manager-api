@@ -1,11 +1,11 @@
-const bcryptjs = require("bcryptjs");
 const { User } = require("../models/User");
+const hashPassword = require("../../../utils/hashPassword");
 
-const createUser = async (data) => {
+const create = async (data) => {
   try {
     const { firstName, lastName, username, email, password } = data;
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     const user = new User({
       firstName,
@@ -20,11 +20,22 @@ const createUser = async (data) => {
     return user;
   } catch (error) {
     console.log("Error creating the user", error.message);
+    throw error;
+  }
+};
 
-    throw new Error("Failed to create the user");
+const findOne = async (username) => {
+  try {
+    const user = User.findOne({ username });
+
+    return user;
+  } catch (error) {
+    console.log("Error finding user", error.message);
+    throw error;
   }
 };
 
 module.exports = {
-  createUser,
+  create,
+  findOne,
 };
