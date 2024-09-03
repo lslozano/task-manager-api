@@ -4,16 +4,9 @@ const {
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
 } = require("../utils/index");
+const { userRequiredFields } = require("../../utils/requiredModelsFields");
 
 const User = mongoose.model("User", UserSchema);
-
-const userRequiredFields = [
-  "firstName",
-  "lastName",
-  "username",
-  "email",
-  "password",
-];
 
 afterEach(async () => {
   await User.deleteMany({});

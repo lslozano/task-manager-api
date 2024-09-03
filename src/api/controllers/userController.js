@@ -1,5 +1,5 @@
 const userService = require("../services/userService");
-const comparePassword = require("../../../utils/comparePassword");
+const validateUserPassword = require("../../../utils/validateUserPassword");
 
 const getRegister = (_, res) => {
   res.status(200).json({ message: "Welcome to the register page!" });
@@ -32,10 +32,6 @@ const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    if (!username || !password || username === "" || password === "") {
-      throw new Error("Required fields are missing.");
-    }
-
     const user = await userService.findOne(username);
 
     if (!user) {
@@ -44,11 +40,7 @@ const loginUser = async (req, res) => {
 
     const { password: userPassword } = user;
 
-    const isPasswordCorrect = await comparePassword(password, userPassword);
-
-    if (!isPasswordCorrect) {
-      throw new Error("Incorrect credentials");
-    }
+    await validateUserPassword(password, userPassword);
 
     res.status(200).json(user);
   } catch (error) {

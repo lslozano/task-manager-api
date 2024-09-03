@@ -5,10 +5,9 @@ const {
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
 } = require("../utils/index");
+const { commentRequiredFields } = require("../../utils/requiredModelsFields");
 
 const Comment = mongoose.model("Comment", CommentSchema);
-
-const commentRequiredFields = ["comment", "createdBy", "taskId"];
 
 describe("Comment Required Fields Validation", () => {
   it("should not allow creating a comment when all required fields are missing", async () => {

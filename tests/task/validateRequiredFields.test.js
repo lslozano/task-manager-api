@@ -5,10 +5,9 @@ const {
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
 } = require("../utils/index");
+const { taskRequiredFields } = require("../../utils/requiredModelsFields");
 
 const Task = mongoose.model("Task", TaskSchema);
-
-const taskRequiredFields = ["title", "createdBy"];
 
 describe("Task Required Fields Validation", () => {
   it("should not allow creating a task when all required fields are missing", async () => {
