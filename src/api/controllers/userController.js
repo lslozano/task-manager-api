@@ -1,18 +1,20 @@
 const userService = require("../services/userService");
 const validateUserPassword = require("../../../utils/validateUserPassword");
+const NotFoundError = require("../errors/NotFoundError");
+const DatabaseError = require("../errors/DatabaseError");
 
 const getRegister = (_, res) => {
   res.status(200).json({ message: "Welcome to the register page!" });
 };
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const body = req.body;
 
     const newUser = await userService.create(body);
 
     if (!newUser) {
-      throw new Error("Something went wrong creating the user");
+      throw new DatabaseError("Failed to create user");
     }
 
     res.status(200).json({
@@ -20,22 +22,22 @@ const registerUser = async (req, res) => {
       data: newUser,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const getLogin = (_, res) => {
+const getLogin = (_, res, next) => {
   res.status(200).json({ message: "Welcome to the login page!" });
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
     const user = await userService.findOne(username);
 
     if (!user) {
-      throw new Error("Invalid credentials");
+      throw new NotFoundError("The resource was not found");
     }
 
     const { password: userPassword } = user;
@@ -44,7 +46,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
