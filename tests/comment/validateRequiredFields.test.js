@@ -4,7 +4,7 @@ const {
   getValidationError,
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
-} = require("../utils/index");
+} = require("../test-utils/index");
 const { commentRequiredFields } = require("../../utils/requiredModelsFields");
 
 const Comment = mongoose.model("Comment", CommentSchema);
