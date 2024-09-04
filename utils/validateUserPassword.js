@@ -1,13 +1,14 @@
-const comparePassword = require("./comparePassword");
+const bcryptjs = require("bcryptjs");
+const ValidationError = require("../src/api/errors/ValidationError");
 
-const validateUserPassword = async (inputPassword, storedPassword) => {
-  const isPasswordCorrect = await comparePassword(
+const validateUserPassword = async (inputPassword, hashedPassword) => {
+  const isCorrectPassword = await bcryptjs.compare(
     inputPassword,
-    storedPassword
+    hashedPassword
   );
 
-  if (!isPasswordCorrect) {
-    throw new Error("Incorrect credentials");
+  if (!isCorrectPassword) {
+    throw new ValidationError("Invalid Credentials");
   }
 };
 
