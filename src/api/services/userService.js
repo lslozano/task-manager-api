@@ -19,7 +19,6 @@ const create = async (data) => {
 
     return user;
   } catch (error) {
-    console.log("Error creating the user", error.message);
     throw error;
   }
 };
@@ -30,7 +29,6 @@ const findOne = async (username) => {
 
     return user;
   } catch (error) {
-    console.log("Error finding user", error.message);
     throw error;
   }
 };
