@@ -1,5 +1,5 @@
 module.exports = {
   transform: {},
-  testEnvironment: "node",
   setupFilesAfterEnv: ["<rootDir>/config/jest.setup.js"],
+  preset: "@shelf/jest-mongodb",
 };
