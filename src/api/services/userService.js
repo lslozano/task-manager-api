@@ -25,7 +25,7 @@ const create = async (data) => {
 
 const findOne = async (username) => {
   try {
-    const user = User.findOne({ username });
+    const user = await User.findOne({ username });
 
     return user;
   } catch (error) {

@@ -4,7 +4,7 @@ const {
   getValidationError,
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
-} = require("../utils/index");
+} = require("../test-utils/index");
 const { taskRequiredFields } = require("../../utils/requiredModelsFields");
 
 const Task = mongoose.model("Task", TaskSchema);

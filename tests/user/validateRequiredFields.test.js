@@ -3,7 +3,8 @@ const { UserSchema } = require("../../src/api/models/User");
 const {
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
-} = require("../utils/index");
+  getValidationError,
+} = require("../test-utils/index");
 const { userRequiredFields } = require("../../utils/requiredModelsFields");
 
 const User = mongoose.model("User", UserSchema);
@@ -16,17 +17,9 @@ describe("User Required Fields Validation", () => {
   it("should not allow creating a user when all required fields are missing", async () => {
     const user = new User();
 
-    let err;
-    try {
-      await user.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(user);
 
-    expectValidationErrorForFields(
-      err,
-      getMissingRequiredFieldsFromModel(userRequiredFields, user)
-    );
+    expectValidationErrorForFields(error, userRequiredFields);
   });
 
   it("should not allow creating a user when only some required fields have been provided", async () => {
@@ -36,15 +29,10 @@ describe("User Required Fields Validation", () => {
       hashPassword: "12345678",
     });
 
-    let err;
-    try {
-      await user.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(user);
 
     expectValidationErrorForFields(
-      err,
+      error,
       getMissingRequiredFieldsFromModel(userRequiredFields, user)
     );
   });
@@ -58,14 +46,9 @@ describe("User Required Fields Validation", () => {
       password: "123456789",
     });
 
-    let err;
-    try {
-      await user.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(user);
 
-    expectValidationErrorForFields(err, ["email"]);
+    expectValidationErrorForFields(error, ["email"]);
   });
 
   it("should not allow creating a user when password length is less than eight characters", async () => {
@@ -77,13 +60,8 @@ describe("User Required Fields Validation", () => {
       password: "123456",
     });
 
-    let err;
-    try {
-      await user.validate();
-    } catch (error) {
-      err = error;
-    }
+    const error = await getValidationError(user);
 
-    expectValidationErrorForFields(err, ["password"]);
+    expectValidationErrorForFields(error, ["password"]);
   });
 });

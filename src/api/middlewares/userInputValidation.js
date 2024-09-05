@@ -42,7 +42,7 @@ const validatePasswordComplexity = (req, res, next) => {
   const body = req.body;
   const { password } = body;
 
-  if (!password.length < 8) {
+  if (password.length < 8) {
     return res
       .status(400)
       .json({ error: "Password does not meet complexity requirements" });
