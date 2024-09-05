@@ -3,6 +3,7 @@ const { UserSchema } = require("../../src/api/models/User");
 const {
   expectValidationErrorForFields,
   getMissingRequiredFieldsFromModel,
+  getValidationError,
 } = require("../test-utils/index");
 const { userRequiredFields } = require("../../utils/requiredModelsFields");
 
@@ -61,6 +62,6 @@ describe("User Required Fields Validation", () => {
 
     const error = await getValidationError(user);
 
-    expectValidationErrorForFields(err, ["password"]);
+    expectValidationErrorForFields(error, ["password"]);
   });
 });
