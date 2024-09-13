@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const CommentService = require("../services/commentService");
+
+const commentService = new CommentService();
 
 const TaskSchema = new mongoose.Schema({
   title: {
@@ -32,7 +35,16 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+});
+
+// Middleware for when a task is deleted, it also removes all related comments.
+TaskSchema.pre("remove", async (next) => {
+  const taskId = this._id;
+
+  await commentService.deleteTaskComments(taskId);
+
+  next();
 });
 
 const Task = mongoose.model("Task", TaskSchema);
