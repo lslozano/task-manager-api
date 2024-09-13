@@ -16,7 +16,7 @@ const CommentSchema = new mongoose.Schema({
   },
   taskId: {
     type: mongoose.Schema.ObjectId,
-    ref: "User",
+    ref: "Task",
     required: true,
   },
 });
