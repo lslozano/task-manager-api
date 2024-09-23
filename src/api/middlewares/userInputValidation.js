@@ -1,17 +1,19 @@
 const { userRequiredFields } = require("../../../utils/requiredModelsFields");
 
-const validateUserInput = (req, res, next) => {
-  const method = req.method;
+const validateUserRegister = (req, res, next) => {
   const body = req.body;
-  const { username, password } = body;
 
-  if (method === "GET") {
-    for (const field of userRequiredFields) {
-      if (!body[field] || body[field].trim() === "") {
-        return res.status(400).json({ error: `${field} is required` });
-      }
+  for (const field of userRequiredFields) {
+    if (!body[field] || body[field].trim() === "") {
+      return res.status(400).json({ error: `${field} is required` });
     }
   }
+
+  next();
+};
+
+const validateUserLogin = (req, res, next) => {
+  const { username, password } = body;
 
   if (
     !username ||
@@ -52,7 +54,8 @@ const validatePasswordComplexity = (req, res, next) => {
 };
 
 module.exports = {
-  validateUserInput,
+  validateUserRegister,
+  validateUserLogin,
   validateUserEmail,
   validatePasswordComplexity,
 };

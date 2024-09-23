@@ -1,39 +1,62 @@
 const { User } = require("../models/User");
 const hashPassword = require("../../../utils/hashPassword");
 
-const create = async (data) => {
-  try {
-    const { firstName, lastName, username, email, password } = data;
+class UserService {
+  constructor() {}
 
-    const hashedPassword = await hashPassword(password);
+  async create(data) {
+    try {
+      const { firstName, lastName, username, email, password } = data;
 
-    const user = new User({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: hashedPassword,
-    });
+      const hashedPassword = await hashPassword(password);
 
-    await user.save();
+      const user = new User({
+        firstName,
+        lastName,
+        username,
+        email,
+        password: hashedPassword,
+      });
 
-    return user;
-  } catch (error) {
-    throw error;
+      await user.save();
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
-};
 
-const findOne = async (username) => {
-  try {
-    const user = await User.findOne({ username });
+  async findOne(username) {
+    try {
+      const user = await User.findOne({ username });
 
-    return user;
-  } catch (error) {
-    throw error;
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
-};
 
-module.exports = {
-  create,
-  findOne,
-};
+  async findOneAndUpdate(username, newData) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { username },
+        { ...newData },
+        { new: true }
+      );
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOneAndDelete(userId) {
+    try {
+      await User.findOneAndDelete({ _id: userId });
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+module.exports = UserService;

@@ -1,31 +1,35 @@
 const express = require("express");
+
 const {
-  getRegister,
+  viewRegister,
+  viewLogin,
   registerUser,
-  getLogin,
   loginUser,
 } = require("../controllers/userController");
+
 const {
-  validateUserInput,
+  validateUserRegister,
+  validateUserLogin,
   validateUserEmail,
   validatePasswordComplexity,
 } = require("../middlewares/userInputValidation");
 
 const userRouter = express.Router();
 
-userRouter.get("/register", getRegister);
+// Get register and login views.
+userRouter.get("/register", viewRegister);
+userRouter.get("/login", viewLogin);
 
+// Create and Login User.
 userRouter.post(
   "/register",
-  [validateUserInput, validateUserEmail, validatePasswordComplexity],
+  [validateUserRegister, validateUserEmail, validatePasswordComplexity],
   registerUser
 );
 
-userRouter.get("/login", getLogin);
-
 userRouter.post(
   "/login",
-  [validateUserInput, validatePasswordComplexity],
+  [validateUserLogin, validatePasswordComplexity],
   loginUser
 );
 

@@ -1,12 +1,17 @@
-const userService = require("../services/userService");
-const validateUserPassword = require("../../../utils/validateUserPassword");
+const { userService } = require("../services/index");
 const NotFoundError = require("../errors/NotFoundError");
 const DatabaseError = require("../errors/DatabaseError");
+
+const validateUserPassword = require("../../../utils/validateUserPassword");
 const createToken = require("../../../utils/createToken");
 const createCookie = require("../middlewares/createCookie");
 
-const getRegister = (_, res) => {
-  res.status(200).json({ message: "Welcome to the register page!" });
+const viewRegister = (_, res) => {
+  return res.status(200).json({ message: "Welcome to the register page!" });
+};
+
+const viewLogin = (_, res) => {
+  return res.status(200).json({ message: "Welcome to the login page!" });
 };
 
 const registerUser = async (req, res, next) => {
@@ -19,18 +24,14 @@ const registerUser = async (req, res, next) => {
       throw new DatabaseError("Failed to create user");
     }
 
-    const token = createToken(res, newUser);
+    const token = createToken(newUser);
 
     createCookie(res, token);
 
-    res.status(201).redirect("/profile");
+    return res.status(201).redirect("/profile");
   } catch (error) {
     next(error);
   }
-};
-
-const getLogin = (_, res) => {
-  res.status(200).json({ message: "Welcome to the login page!" });
 };
 
 const loginUser = async (req, res, next) => {
@@ -47,20 +48,47 @@ const loginUser = async (req, res, next) => {
 
     await validateUserPassword(password, userPassword);
 
-    const token = createToken(res, user);
+    const token = createToken(user);
 
     createCookie(res, token);
 
-    console.log(token);
-    res.status(201).redirect("/profile");
+    return res.status(201).redirect("/profile");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const logoutUser = (_, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  return res.redirect("/");
+};
+
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+
+    await userService.findOneAndDelete(userId);
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.redirect("/");
   } catch (error) {
     next(error);
   }
 };
 
 module.exports = {
-  getRegister,
+  viewRegister,
+  viewLogin,
   registerUser,
-  getLogin,
   loginUser,
+  logoutUser,
+  deleteUser,
 };
