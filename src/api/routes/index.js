@@ -5,7 +5,7 @@ const homeRoute = require("./homeRoute");
 const userRoutes = require("./userRoutes");
 const profileRoutes = require("./profileRoutes");
 const taskRoutes = require("./taskRoutes");
-comment;
+const commentRoutes = require("./commentRoutes");
 
 const routerApi = (app) => {
   const router = express.Router();
