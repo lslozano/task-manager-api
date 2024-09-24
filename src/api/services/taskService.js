@@ -1,4 +1,7 @@
+const DatabaseError = require("../errors/DatabaseError");
 const { Task } = require("../models/Task");
+
+const allowedStatus = ["pending", "in progress", "completed"];
 
 class TaskService {
   constructor() {}
@@ -50,6 +53,10 @@ class TaskService {
 
   async findOneAndUpdate(taskId, newData) {
     try {
+      if (newData.status && !allowedStatus.includes(newData.status)) {
+        throw new Error("Invalid role");
+      }
+
       const updatedTask = await Task.findOneAndUpdate(
         { _id: taskId },
         { ...newData, updatedAt: Date.now() },
@@ -64,9 +71,13 @@ class TaskService {
 
   async findOneAndDelete(taskId) {
     try {
-      const task = await Task.find(taskId);
+      const task = await Task.findById(taskId);
 
-      await task.remove();
+      if (!task) {
+        throw new DatabaseError("Task not found");
+      }
+
+      await task.deleteOne();
 
       return task;
     } catch (error) {
@@ -89,7 +100,7 @@ class TaskService {
     }
   }
 
-  async findOneAddDeleteComment(taskId, commentId) {
+  async findOneAndDeleteComment(taskId, commentId) {
     try {
       await Task.findByIdAndUpdate(
         taskId,

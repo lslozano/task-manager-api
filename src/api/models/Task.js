@@ -15,6 +15,7 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     enum: ["pending", "in progress", "completed"],
     default: "pending",
+    required: true,
   },
   createdBy: {
     type: mongoose.Schema.ObjectId,
@@ -39,13 +40,17 @@ const TaskSchema = new mongoose.Schema({
 });
 
 // Middleware for when a task is deleted, it also removes all related comments.
-TaskSchema.pre("remove", async (next) => {
-  const taskId = this._id;
+TaskSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    const taskId = this._id;
 
-  await commentService.deleteTaskComments(taskId);
+    await commentService.deleteTaskComments(taskId);
 
-  next();
-});
+    next();
+  }
+);
 
 const Task = mongoose.model("Task", TaskSchema);
 

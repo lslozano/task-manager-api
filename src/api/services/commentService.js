@@ -1,3 +1,4 @@
+const DatabaseError = require("../errors/DatabaseError");
 const { Comment } = require("../models/Comment");
 
 class CommentService {
@@ -64,7 +65,15 @@ class CommentService {
 
   async findOneAndDelete(commentId) {
     try {
-      await Comment.findOneAndDelete({ _id: commentId });
+      const comment = await Comment.findById(commentId);
+
+      if (!comment) {
+        throw new DatabaseError("Comment not found");
+      }
+
+      await comment.deleteOne();
+
+      return comment;
     } catch (error) {
       throw error;
     }

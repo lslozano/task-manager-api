@@ -1,5 +1,9 @@
 const DatabaseError = require("../errors/DatabaseError");
-const { commentService, taskService } = require("../services");
+const TaskService = require("../services/taskService");
+const CommentService = require("../services/commentService");
+
+const taskService = new TaskService();
+const commentService = new CommentService();
 
 const addCommentToTask = async (taskId, commentId) => {
   const taskUpdate = await taskService.findOneAndAddComment(taskId, commentId);
@@ -37,7 +41,7 @@ const createComment = async (req, res, next) => {
   }
 };
 
-const viewComment = async (req, res) => {
+const viewComment = async (req, res, next) => {
   try {
     const { commentId } = req.params;
 
@@ -48,8 +52,8 @@ const viewComment = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Task found",
-      task,
+      message: "Comment found",
+      comment,
     });
   } catch (error) {
     next(error);
@@ -60,14 +64,14 @@ const viewComments = async (_, res, next) => {
   try {
     const comments = await commentService.findAll();
 
-    if (!comments) {
+    if (comments.length === 0) {
       return res.status(200).json({
-        message: "No tasks found.",
+        message: "No comments found.",
       });
     }
 
     return res.status(200).json({
-      tasks,
+      comments,
     });
   } catch (error) {
     next(error);
@@ -76,8 +80,16 @@ const viewComments = async (_, res, next) => {
 
 const editComment = async (req, res, next) => {
   try {
-    const { commentId } = req.params;
+    const { taskId, commentId } = req.params;
     const body = req.body;
+
+    const task = await taskService.findOne(taskId);
+
+    if (task.comments.length === 0) {
+      return res.status(200).json({
+        message: "No comments for this task to be updated",
+      });
+    }
 
     const comment = await commentService.findOneAndUpdate(commentId, body);
 
@@ -104,7 +116,7 @@ const deleteComment = async (req, res, next) => {
       throw new DatabaseError("Failed to delete comment");
     }
 
-    await taskService.findOneAddDeleteComment(taskId, commentId);
+    await taskService.findOneAndDeleteComment(taskId, commentId);
 
     return res.status(200).json({
       message: "Comment deleted",

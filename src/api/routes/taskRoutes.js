@@ -8,7 +8,7 @@ const {
   deleteTask,
 } = require("../controllers/taskController");
 const {
-  addComment,
+  createComment,
   editComment,
   deleteComment,
 } = require("../controllers/commentController");
@@ -20,9 +20,9 @@ taskRouter.get("/", viewTasks);
 taskRouter.post("/", validateTaskRequiredFields, createTask);
 taskRouter.get("/:taskId", viewTask);
 taskRouter.patch("/:taskId/edit", editTask);
-taskRouter.post("/:taskId/comment", addComment);
-taskRouter.post("/:taskId/comment/:commentId", editComment);
-taskRouter.delete("/:taskId/comment/:commentId", deleteComment);
+taskRouter.post("/:taskId/comment", createComment);
+taskRouter.patch("/:taskId/comment/:commentId/edit", editComment);
+taskRouter.delete("/:taskId/comment/:commentId/delete", deleteComment);
 taskRouter.delete("/:taskId/delete", deleteTask);
 
 module.exports = taskRouter;
