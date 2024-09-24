@@ -1,13 +1,20 @@
-const { userService } = require("../services/index");
+const UserService = require("./userService");
 const createToken = require("../../../utils/createToken");
 const hashPassword = require("../../../utils/hashPassword");
 const createCookie = require("../middlewares/createCookie");
+
+const userService = new UserService();
+const allowedRoles = ["user", "admin"];
 
 class ProfileService {
   constructor() {}
 
   async findOneAndUpdate(res, username, newData) {
     try {
+      if (newData.role && !allowedRoles.includes(newData.role)) {
+        throw new Error("Invalid role");
+      }
+
       const newPassword = newData["password"];
 
       if (newPassword) {

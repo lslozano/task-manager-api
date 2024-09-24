@@ -1,6 +1,5 @@
 const DatabaseError = require("../errors/DatabaseError");
 const TaskService = require("../services/taskService");
-const CommentService = require("../services/commentService");
 
 const taskService = new TaskService();
 
@@ -14,13 +13,15 @@ const createTask = async (req, res, next) => {
       throw new DatabaseError("Failed to create Task");
     }
 
-    return res.status(200).redirect("/tasks");
+    const { _id: taskId } = newTask;
+
+    return res.status(200).redirect(`/api/v1/tasks/${taskId}`);
   } catch (error) {
     next(error);
   }
 };
 
-const viewTask = async (req, res) => {
+const viewTask = async (req, res, next) => {
   try {
     const { taskId } = req.params;
 
@@ -43,7 +44,7 @@ const viewTasks = async (_, res, next) => {
   try {
     const tasks = await taskService.findAll();
 
-    if (!tasks) {
+    if (tasks.length === 0) {
       return res.status(200).json({
         message: "No tasks found.",
       });
@@ -57,7 +58,7 @@ const viewTasks = async (_, res, next) => {
   }
 };
 
-const editTask = async (req, res) => {
+const editTask = async (req, res, next) => {
   try {
     const { taskId } = req.params;
     const body = req.body;
@@ -87,10 +88,7 @@ const deleteTask = async (req, res, next) => {
       throw new DatabaseError("Failed to delete task");
     }
 
-    return res.status(200).json({
-      message: "Task deleted",
-      data: taskDelete,
-    });
+    return res.status(200).redirect("/tasks");
   } catch (error) {
     next(error);
   }

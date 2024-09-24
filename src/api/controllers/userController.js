@@ -1,10 +1,12 @@
-const { userService } = require("../services/index");
 const NotFoundError = require("../errors/NotFoundError");
 const DatabaseError = require("../errors/DatabaseError");
+const UserService = require("../services/userService");
 
 const validateUserPassword = require("../../../utils/validateUserPassword");
 const createToken = require("../../../utils/createToken");
 const createCookie = require("../middlewares/createCookie");
+
+const userService = new UserService();
 
 const viewRegister = (_, res) => {
   return res.status(200).json({ message: "Welcome to the register page!" });

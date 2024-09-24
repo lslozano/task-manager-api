@@ -13,7 +13,7 @@ const validateUserRegister = (req, res, next) => {
 };
 
 const validateUserLogin = (req, res, next) => {
-  const { username, password } = body;
+  const { username, password } = req.body;
 
   if (
     !username ||
