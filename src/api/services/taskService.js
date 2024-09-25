@@ -85,7 +85,7 @@ class TaskService {
     }
   }
 
-  // Adds the created comment to the corresponding task.
+  // Comment related methods
   async findOneAndAddComment(taskId, commentId) {
     try {
       const updatedTask = Task.findOneAndUpdate(
