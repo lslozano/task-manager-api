@@ -16,13 +16,16 @@ const validateTaskRequiredFields = require("../middlewares/tasklnputValidation")
 
 const taskRouter = express.Router();
 
+// All actions related to Task model
 taskRouter.get("/", viewTasks);
 taskRouter.post("/", validateTaskRequiredFields, createTask);
 taskRouter.get("/:taskId", viewTask);
-taskRouter.patch("/:taskId/edit", editTask);
+taskRouter.put("/:taskId", editTask);
+taskRouter.delete("/:taskId", deleteTask);
+
+// All actions related to Comment model that is linked to Task
 taskRouter.post("/:taskId/comment", createComment);
-taskRouter.patch("/:taskId/comment/:commentId/edit", editComment);
-taskRouter.delete("/:taskId/comment/:commentId/delete", deleteComment);
-taskRouter.delete("/:taskId/delete", deleteTask);
+taskRouter.put("/:taskId/comment/:commentId", editComment);
+taskRouter.delete("/:taskId/comment/:commentId", deleteComment);
 
 module.exports = taskRouter;
