@@ -48,7 +48,7 @@ const viewComment = async (req, res, next) => {
     const comment = await commentService.findOne(commentId);
 
     if (!comment) {
-      throw new DatabaseError("Could not find task");
+      throw new DatabaseError("Could not find comment");
     }
 
     return res.status(200).json({
