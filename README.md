@@ -19,7 +19,6 @@ A RESTful API project built with Node.js, Express, and MongoDB, allowing users t
   - [Task Management](#task-management)
   - [Comment Management](#comment-management)
 - [API Documentation](#api-documentation)
-- [Folder Structure](#folder-structure)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
@@ -155,29 +154,6 @@ The API should now be running on `http://localhost:3000`.
 ## API Documentation
 
 The API Documentation can be reviewed [here](https://documenter.getpostman.com/view/11121286/2sAXqzVxxP).
-
-## Folder Structure
-
-task-manager-api/
-│- src/
-│-- api/
-│ │- controllers/
-│ │- errors/
-│ │- middlewares/
-│ │- models/
-│ │- routes/
-│ │- services/
-│- tests/
-│- utils/
-│- .env
-│- .gitignore/
-│- app.js/
-│- jest.config.js/
-│- jest.mongodb.config.js/
-│- package-lock.json/
-│- package.json/
-│- README.md/
-│- server.js/
 
 ## Testing
 
